@@ -1,6 +1,6 @@
 let Currencies = new Map();
 
-Currencies.set('a',  require('./currencies/a/a.js') );
+Currencies.set('a', require('./currencies/a/a.js') );
 Currencies.set('b', require('./currencies/b/b.js') );
 Currencies.set('c', require('./currencies/c/c.js') );
 Currencies.set('d', require('./currencies/d/d.js') );
