@@ -1,4 +1,4 @@
-module.exports.ToSentenceCase = (streeng) => {
+const ToSentenceCase = (streeng) => {
     let splitStringArray = streeng.split(" ");
 
     if (splitStringArray.length === 1) {
@@ -18,3 +18,6 @@ module.exports.ToSentenceCase = (streeng) => {
 
 
 }
+
+
+module.exports=ToSentenceCase

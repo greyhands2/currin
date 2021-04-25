@@ -1,4 +1,4 @@
-let rcountryMap = new map();
+let rcountryMap = new Map();
 
 rcountryMap.set('Reunion (France)', { currency: 'European euro', shortForm: 'EUR' });
 

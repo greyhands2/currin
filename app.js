@@ -21,7 +21,7 @@ const express = require('express'),
 
     app.use(`${process.env.BASE_NAME}/countries`, require('./routes/countriesRoutes.js'));
 
-    app.all('*', (req, res, err)=>{
+    app.all('*', (req, res, next)=>{
         // we create an error by initializing the Error class object
 
 
@@ -33,6 +33,8 @@ const express = require('express'),
     // using express's error handling middleware
 
     app.use(require('./error/errorControls.js'));
+
+    module.exports = app;
 
 
 

@@ -1,4 +1,4 @@
-let ncountryMap = new map();
+let ncountryMap = new Map();
 
 ncountryMap.set('Namibia', { currency: 'Namibian dollar', shortForm: 'NAD' });
 

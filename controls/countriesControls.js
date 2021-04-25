@@ -1,71 +1,134 @@
-
+const redis = require('redis');
 const Countries = require('../countries/countries.js');
-const asyncCatcher= require('../helpers/asyncCatcher.js');
+const funcCatcher= require('../helpers/funcCatcher.js');
 
-exports.getAllCountries = (req,res)=>{
-    let results=[];
-     Countries.forEach((val, key) => {
-        val.forEach((val1, key1)=>{
-            results.push({country: key1, ...key1})
+const client = redis.createClient({
+     host: "ec2-184-72-229-210.compute-1.amazonaws.com",
+     port: 23639,
+     password: "pb8d96c3abc9eee998e1f22b59abae51b7d33065074db6dfcd3bade15eecab415"
+ });
+exports.getAllCountries = funcCatcher((req,res, next) => {
+    client.get('all', (err, jobs)=>{
+        if(err) console.log(err);
+        if(jobs){
+            
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: JSON.parse(jobs)
+                    
+                });
+        } else {
+            let results = [];
+            Countries.forEach((val, key) => {
+                val.forEach((val1, key1) => {
+                    results.push({ country: key1, ...val1 })
 
-        })
-    });
+                })
+            });
 
-    res.status(200).json({
-        status: "Success",
-        data:{
-            results
+            client.setex('all',  600, JSON.stringify(results));
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: {
+                        results
+                    }
+                });
         }
-    });
 
-};
-
-
-exports.getCountry=(req, res) => {
-    let result;
-  
-    let countryGroup = getCountriesWithAlphabets(req.params.countryName, res);
-
-    for( const [val, key] of  countryGroup.entries() ){
-      //todo: fix a ranker algorithm for text correction in this if block
-        if(key===require('../helpers/toSentenceCase.js')(queryKey)){
-            result={country:key, ...val};
-            break;
-        }
-    }
-
-    if (!(!!result)) return res.status(200).json({
-        status: "Failed",
-        message: "Country Not found"
-    });
-
-    res.status(200).json({
-        status: "Success",
-        data:{
-            result
-        }
     })
 
-}
+    
+
+});
+
+
+exports.getCountry=funcCatcher((req, res, next) => {
+    client.get(req.params.countryName.toString().toLowerCase(), (err, jobs) => {
+        if (err) console.log(err);
+        if (jobs) {
+           
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: JSON.parse(jobs)
+
+                });
+        } else {
+            let result;
+
+            let [countryGroup, queryKey] = [getCountriesWithAlphabets(req.params.countryName, res), require('../helpers/toSentenceCase.js')(req.params.countryName)];
+            
+            for (const [key, val] of countryGroup.entries()) {
+                //todo: fix a ranker algorithm for text correction in this if block
+                
+                if (key === queryKey) {
+                    result = { country: key, ...val };
+                    break;
+                }
+            }
+
+           
+            if (!(!!result)) return res.status(200).json({
+                status: "Failed",
+                message: "Country Not found"
+            });
+
+            client.setex(req.params.countryName.toString().toLowerCase(),  600, JSON.stringify(result));
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: {
+                        result
+                    }
+                })
+        }
+
+
+    });
+    
+
+});
 
 
 
 
 exports.getCountriesGroup = (req, res) =>{
-    let countryGroup = getCountriesWithAlphabets (req.params.query, res);
-    let result=[];
-    
-    countryGroup.forEach((val, key)=>{
-        result.push({country: key, ...val});
-    });
 
-    res.status(200).json({
-        status: "Success",
-        data:{
-            result
+    client.get(req.params.query.toString().toLowerCase()[0], (err, jobs) => {
+        if (err) console.log(err);
+        if (jobs) {
+           
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: JSON.parse(jobs)
+
+                });
+        } else {
+            let countryGroup = getCountriesWithAlphabets(req.params.query, res);
+            let result = [];
+
+            countryGroup.forEach((val, key) => {
+                result.push({ country: key, ...val });
+            });
+
+            client.setex(req.params.query.toString().toLowerCase()[0], 600, JSON.stringify(result));
+            res.status(200)
+                .json({
+                    status: "Success",
+                    data: {
+                        result
+                    }
+                });
+
+
         }
-    });
 
+    })
+
+    
 
 }
 
