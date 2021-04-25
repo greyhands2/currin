@@ -3,9 +3,9 @@ const Countries = require('../countries/countries.js');
 const funcCatcher= require('../helpers/funcCatcher.js');
 
 const client = redis.createClient({
-     host: "ec2-184-72-229-210.compute-1.amazonaws.com",
-     port: 23639,
-     password: "pb8d96c3abc9eee998e1f22b59abae51b7d33065074db6dfcd3bade15eecab415"
+     host:process.env.REDIS_HOST,
+     port: process.env.REDIS_PORT,
+     password:  process.env.REDIS_PASSWORD
  });
 exports.getAllCountries = funcCatcher((req,res, next) => {
     client.get('all', (err, jobs)=>{
