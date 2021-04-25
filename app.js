@@ -19,7 +19,7 @@ const express = require('express'),
     app.use(cors());
     app.options('*', cors());
 
-    app.use(`${process.env.BASE_NAME}`)
+    app.use(`${process.env.BASE_NAME}/countries`, require('./routes/countriesRoutes.js'));
 
     app.all('*', (req, res, err)=>{
         // we create an error by initializing the Error class object
