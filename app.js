@@ -7,12 +7,14 @@ const express = require('express'),
 
     app.use(helmet());
     const limiter = rateLimit({
-    // depends on the nature of your api usage
-    max: 100,
-    // set time limit to 1hr
-    windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, try again in an hour'
+        // depends on the nature of your api usage
+        max: 100,
+        // set time limit to 1hr
+        windowMs: 60 * 60 * 1000,
+        message: 'Too many requests from this IP, try again in an hour'
     });
+
+    
     app.use('/currin', limiter);
     app.use(express.json({ limit: '10kb' }));
     app.use(express.urlencoded({ extended: true, limit: '10kb' }));

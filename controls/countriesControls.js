@@ -73,7 +73,7 @@ exports.getCountry=funcCatcher((req, res, next) => {
            
             if (!(!!result)) return res.status(200).json({
                 status: "Failed",
-                message: "Country Not found"
+                message: "Country Not Found"
             });
 
             client.setex(req.params.countryName.toString().toLowerCase(),  600, JSON.stringify(result));
@@ -141,7 +141,7 @@ const getCountriesWithAlphabets = (query, res) => {
     let countryGroup = Countries.get(query.toString()[0].toLowerCase());
     if (countryGroup.size===0) return res.status(200).json({
         status: "Failed",
-        message: "Country Not found"
+        message: "Country Not Found"
     });
 
     return countryGroup;
