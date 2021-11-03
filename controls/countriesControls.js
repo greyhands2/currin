@@ -3,7 +3,7 @@ const redis = require('redis');
 const Countries = require('../countries/countries.js');
 const funcCatcher= require('../helpers/funcCatcher.js');
 
-const client = redis.createClient(process.env.REDIS_URL,{
+const client = redis.createClient(process.env.REDIS_TLS_URL,{
     tls: {
         rejectUnauthorized: false
     }
