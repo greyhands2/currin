@@ -1,4 +1,4 @@
-const redis = require('redis');
+const { createClient } = require('redis');
 
 const Countries = require('../countries/countries.js');
 const funcCatcher= require('../helpers/funcCatcher.js');
